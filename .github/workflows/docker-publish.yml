@@ -21,7 +21,4 @@ jobs:
       uses: docker/setup-buildx-action@v3
 
     - name: Build and Push EarnApp Stealth Image
-      run: |
-        docker buildx build --platform linux/amd64 \
-        -t ghcr.io/${{ github.actor }}/earnapp-stealth:latest \
-        --push .
+      run: docker buildx build --platform linux/amd64 -t ghcr.io/${{ github.actor }}/earnapp-stealth:latest --push .
