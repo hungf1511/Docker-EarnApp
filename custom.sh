@@ -146,4 +146,4 @@ sleep 3
 echo "Container running indefinitely..."
 tail -f /dev/null
 EOF
-chmod +x /docker-entrypoint.sh
+chmod +x /entrypoint.sh
