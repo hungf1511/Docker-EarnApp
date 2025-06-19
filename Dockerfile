@@ -25,4 +25,4 @@ RUN chmod +x /docker-entrypoint.sh
 
 VOLUME [ "/etc/earnapp" ]
 
-ENTRYPOINT ["/docker-entrypoint.sh"]
+ENTRYPOINT ["/entrypoint.sh"]
