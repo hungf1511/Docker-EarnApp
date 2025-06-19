@@ -5,6 +5,14 @@ echo " Starting up ... "
 echo "### ### ### ### ###"
 echo " "
 
+echo "### Selecting hardware profile ###"
+
+SELECTED_PROFILE=$(find /hardware_profiles -mindepth 1 -maxdepth 1 -type d | shuf -n 1)
+mkdir -p /runtime_profile
+cp -r $SELECTED_PROFILE/* /runtime_profile/
+
+echo "Loaded hardware profile: $SELECTED_PROFILE"
+
 if [[ -z "$EARNAPP_UUID" ]]; then
     echo "Error: EARNAPP_UUID is missing or empty."
     echo "Run the following command to generate one:"
