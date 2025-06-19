@@ -17,7 +17,7 @@ RUN VERSION=$(grep VERSION= /app/setup.sh | cut -d'"' -f2) && \
 
 # Add hardware profile generator script
 COPY custom_hardware_generate.sh /custom_hardware_generate.sh
-RUN chmod +x /custom_hardware_generate.sh && bash /custom_hardware_generate.sh
+RUN chmod +x /custom_hardware_generate.sh
 
 # Add entrypoint
 COPY entrypoint.sh /entrypoint.sh
