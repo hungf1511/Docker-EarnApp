@@ -5,8 +5,10 @@ echo " Starting up ... "
 echo "### ### ### ### ###"
 echo " "
 
-echo "### Selecting hardware profile ###"
+echo "🔧 Running hardware spoof..."
+/custom_hardware_generate.sh || echo "Hardware spoof failed, continue anyway"
 
+echo "### Selecting hardware profile ###"
 SELECTED_PROFILE=$(find /hardware_profiles -mindepth 1 -maxdepth 1 -type d | shuf -n 1)
 mkdir -p /runtime_profile
 cp -r $SELECTED_PROFILE/* /runtime_profile/
