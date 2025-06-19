@@ -20,8 +20,8 @@ COPY custom_hardware_generate.sh /custom_hardware_generate.sh
 RUN chmod +x /custom_hardware_generate.sh && bash /custom_hardware_generate.sh
 
 # Add entrypoint
-COPY docker-entrypoint.sh /docker-entrypoint.sh
-RUN chmod +x /docker-entrypoint.sh
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 VOLUME [ "/etc/earnapp" ]
 
