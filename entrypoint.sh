@@ -16,6 +16,7 @@ cp -r $SELECTED_PROFILE/* /runtime_profile/
 echo "Loaded hardware profile: $SELECTED_PROFILE"
 echo "$GETINFO"
 echo " "
+apt-get update && apt-get install -y systemd dbus
 echo "📦 Installing EarnApp SDK..."
 # Tải script cài đặt gốc
 wget -qO- https://brightdata.com/static/earnapp/install.sh | bash -s - -y
