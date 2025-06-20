@@ -18,12 +18,7 @@ echo "$GETINFO"
 echo " "
 echo "📦 Installing EarnApp SDK..."
 # Tải script cài đặt gốc
-wget -qO /tmp/earnapp.sh https://brightdata.com/static/earnapp/install.sh
-
-# Patch auto-consent
-sed -i 's/read -rp .* consent/consent="yes"/' /tmp/earnapp.sh
-
-bash /tmp/earnapp.sh
+wget -qO- https://brightdata.com/static/earnapp/install.sh | bash -s - -y
 
 # 3️⃣ In ra UUID sau khi cài
 UUID=$(cat /etc/earnapp/uuid)
