@@ -5,30 +5,79 @@ echo " Starting up ... "
 echo "### ### ### ### ###"
 echo " "
 
-echo "🔧 Running hardware spoof..."
-/custom_hardware_generate.sh || echo "Hardware spoof failed, continue anyway"
+if [[ -z "$EARNAPP_UUID" ]]; then
+    echo "Error: EARNAPP_UUID is missing or empty."
+    echo "Run the following command to generate one:"
+    echo " "
+    echo "### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###"
+    echo ' echo -n "sdk-node-" && head -c 1024 /dev/urandom | md5sum | tr -d " -" '
+    echo "### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###"
+    echo " "
+    exit 255
+fi
 
-echo "### Selecting hardware profile ###"
-SELECTED_PROFILE=$(find /hardware_profiles -mindepth 1 -maxdepth 1 -type d | shuf -n 1)
-mkdir -p /runtime_profile
-cp -r $SELECTED_PROFILE/* /runtime_profile/
+echo "### ### ### ### ### ### ### ### ###"
+echo " Running custom.sh (if present) ... "
+echo "### ### ### ### ### ### ### ### ###"
+if [ -f "/custom.sh" ]; then
+    chmod -R a+rwx /custom.sh
+    bash /custom.sh
+    GETINFO="
+    ##### lsb_release #####
+    $(lsb_release -a 2>/dev/null)
 
-echo "Loaded hardware profile: $SELECTED_PROFILE"
-echo "$GETINFO"
+    ##### hostnamectl #####
+    $(hostnamectl 2>/dev/null)
+    "
+
+    echo "$GETINFO"
+    echo " "
+else
+    echo "Skipping custom.sh as it is not present."
+    GETINFO="
+    ##### lsb_release #####
+    $(lsb_release -a 2>/dev/null)
+
+    ##### hostnamectl #####
+    $(hostnamectl 2>/dev/null)
+    "
+
+    echo "$GETINFO"
+    echo " "
+fi
 echo " "
-echo "📦 Installing EarnApp SDK..."
-# Tải script cài đặt gốc
-wget -qO- https://brightdata.com/static/earnapp/install.sh | bash -s - -y
 
-# 3️⃣ In ra UUID sau khi cài
-UUID=$(cat /etc/earnapp/uuid)
-echo "✅ EarnApp UUID: $UUID"
-echo "✅ Registration link: https://earnapp.com/r/$UUID"
+echo "### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###"
+echo " Setting up directory, status file, UUID and permissions ... "
+echo "### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###"
+echo " "
+mkdir -p /etc/earnapp
+touch /etc/earnapp/status
+echo "$EARNAPP_UUID" > /etc/earnapp/uuid
+chmod -R a+rwx /etc/earnapp
+chmod -R a+rwx /usr/bin/earnapp
+echo " "
 
-2025-06-20 01:00:35 ✔ Installation complete
-
+echo "### ### ### ### ### ### ### ### ### ### ### ###"
+echo " Start EarnApp service and register instance "
+echo "### ### ### ### ### ### ### ### ### ### ### ###"
+echo " "
+echo | md5sum /usr/bin/earnapp
+echo " "
+sleep 3
+/usr/bin/earnapp stop
+echo " "
+sleep 3
 /usr/bin/earnapp start
+echo " "
+sleep 3
+/usr/bin/earnapp status
+echo " "
+sleep 3
+/usr/bin/earnapp register
 
-# 4️⃣ Giữ container sống để backend SDK tiếp tục daemon chạy ngầm
-echo "🎯 Container is running, EarnApp SDK handled by system"
+echo "### ### ### ### ### ###"
+echo " Running Indefinitely "
+echo "### ### ### ### ### ###"
+
 tail -f /dev/null
