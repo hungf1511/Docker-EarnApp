@@ -1,15 +1,34 @@
-FROM ghcr.io/techroy23/docker-slimvnc:latest
+# FROM debian:latest
+# FROM ubuntu:latest
 
+FROM ubuntu:24.04
+
+ENV container=docker
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update -y
-RUN apt-get install -y net-tools gnome-keyring xautomation wmctrl libgtk-3-0 libnotify4 libnss3 libxss1 libxtst6 xdg-utils libatspi2.0-0 libuuid1 libsecret-1-0
+RUN apt-get update -y && apt-get install -y \
+    curl wget tar htop net-tools \
+    && apt-get autoclean -y && apt-get autoremove -y && apt-get autopurge -y && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN wget -O /tmp/wipter.deb https://provider-assets.wipter.com/latest/linux/x64/wipter-app-amd64.deb && \
-    gdebi --n /tmp/wipter.deb && \
-    rm /tmp/wipter.deb
+WORKDIR /app
 
-RUN apt-get autoclean && apt-get autoremove -y && apt-get autopurge -y && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN echo -e "#\!/bin/bash \n echo \"$(lsb_release -a)\"" > /usr/bin/lsb_release
+RUN echo -e "#\!/bin/bash \n echo \"$(hostnamectl)\"" > /usr/bin/hostnamectl
+RUN chmod a+x /usr/bin/hostnamectl /usr/bin/lsb_release
 
-COPY custom-entrypoint.sh /custom-entrypoint.sh
-RUN chmod +x /custom-entrypoint.sh
+
+RUN wget --verbose --output-document=/app/setup.sh https://brightdata.com/static/earnapp/install.sh
+
+RUN VERSION=$(grep VERSION= /app/setup.sh | cut -d'"' -f2) && \
+    wget --verbose --output-document=/usr/bin/earnapp "https://cdn-earnapp.b-cdn.net/static/earnapp-x64-$VERSION" && \
+    chmod -R a+rwx /usr/bin/earnapp
+
+# COPY custom.sh /custom.sh
+# RUN bash /custom.sh
+
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+VOLUME [ "/etc/earnapp" ]
+
+ENTRYPOINT ["/entrypoint.sh"]
