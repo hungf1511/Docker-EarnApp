@@ -9,12 +9,6 @@ RUN apt-get update -y && apt-get install -y \
 
 WORKDIR /app
 
-# Download EarnApp SDK
-RUN wget --verbose --output-document=/app/setup.sh https://brightdata.com/static/earnapp/install.sh
-RUN VERSION=$(grep VERSION= /app/setup.sh | cut -d'"' -f2) && \
-    wget --verbose --output-document=/usr/bin/earnapp "https://cdn-earnapp.b-cdn.net/static/earnapp-x64-$VERSION" && \
-    chmod -R a+rwx /usr/bin/earnapp
-
 # Add hardware profile generator script
 COPY custom_hardware_generate.sh /custom_hardware_generate.sh
 RUN chmod +x /custom_hardware_generate.sh
