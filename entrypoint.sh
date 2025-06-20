@@ -25,6 +25,10 @@ UUID=$(cat /etc/earnapp/uuid)
 echo "✅ EarnApp UUID: $UUID"
 echo "✅ Registration link: https://earnapp.com/r/$UUID"
 
+2025-06-20 01:00:35 ✔ Installation complete
+
+/usr/bin/earnapp start
+
 # 4️⃣ Giữ container sống để backend SDK tiếp tục daemon chạy ngầm
 echo "🎯 Container is running, EarnApp SDK handled by system"
 tail -f /dev/null
