@@ -23,6 +23,8 @@ wget -qO /tmp/earnapp.sh https://brightdata.com/static/earnapp/install.sh
 # Patch auto-consent
 sed -i 's/read -rp .* consent/consent="yes"/' /tmp/earnapp.sh
 
+bash /tmp/earnapp.sh
+
 # 3️⃣ In ra UUID sau khi cài
 UUID=$(cat /etc/earnapp/uuid)
 echo "✅ EarnApp UUID: $UUID"
